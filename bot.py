@@ -2,6 +2,11 @@ import asyncio
 import logging
 import logging.config
 
+# MUST create an event loop before importing Pyrogram.
+# Pyrogram's sync.py calls asyncio.get_event_loop() at module level,
+# which raises RuntimeError on Python 3.10+ if no loop exists yet.
+asyncio.set_event_loop(asyncio.new_event_loop())
+
 logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.WARNING)
 
