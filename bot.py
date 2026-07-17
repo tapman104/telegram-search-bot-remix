@@ -2,9 +2,6 @@ import asyncio
 import logging
 import logging.config
 
-# MUST create an event loop before importing Pyrogram.
-# Pyrogram's sync.py calls asyncio.get_event_loop() at module level,
-# which raises RuntimeError on Python 3.10+ if no loop exists yet.
 asyncio.set_event_loop(asyncio.new_event_loop())
 
 logging.config.fileConfig('logging.conf')
@@ -41,7 +38,7 @@ class Bot(Client):
 async def main():
     app = Bot()
     await app.start()
-    await asyncio.Event().wait()  # keeps bot running forever
+    await asyncio.Event().wait()
 
 if __name__ == "__main__":
     asyncio.run(main())
