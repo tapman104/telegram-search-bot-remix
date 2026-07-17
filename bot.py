@@ -2,7 +2,11 @@ import asyncio
 import logging
 import logging.config
 
-asyncio.set_event_loop(asyncio.new_event_loop())
+# Initialize an event loop before importing Pyrogram to prevent RuntimeError on Python 3.11+
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 
 logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.WARNING)
@@ -38,7 +42,10 @@ class Bot(Client):
 async def main():
     app = Bot()
     await app.start()
-    await asyncio.Event().wait()
+    try:
+        await asyncio.Event().wait()
+    finally:
+        await app.stop()
 
 if __name__ == "__main__":
     asyncio.run(main())

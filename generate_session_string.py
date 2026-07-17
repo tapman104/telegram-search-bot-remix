@@ -6,6 +6,13 @@ logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.WARNING)
 
 import asyncio
+
+# Initialize an event loop before importing Pyrogram to prevent RuntimeError on Python 3.11+
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
 from pyrogram import Client
 from info import API_ID, API_HASH
 
@@ -28,5 +35,5 @@ async def main():
         print(f"Following is your session string -\n\n{session_string}")
 
 
-loop = asyncio.get_event_loop()
-loop.run_until_complete(main())
+if __name__ == "__main__":
+    asyncio.run(main())
