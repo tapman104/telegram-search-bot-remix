@@ -1,7 +1,7 @@
+import asyncio
 import logging
 import logging.config
 
-# Get logging configurations
 logging.config.fileConfig('logging.conf')
 logging.getLogger().setLevel(logging.WARNING)
 
@@ -10,9 +10,7 @@ from pyrogram.raw.all import layer
 from utils import Media
 from info import SESSION, API_ID, API_HASH, BOT_TOKEN
 
-
 class Bot(Client):
-
     def __init__(self):
         super().__init__(
             name=SESSION,
@@ -29,12 +27,16 @@ class Bot(Client):
         await Media.ensure_indexes()
         me = await self.get_me()
         self.username = '@' + me.username
-        print(f"{me.first_name} with for Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
+        print(f"{me.first_name} with Pyrogram v{__version__} (Layer {layer}) started on {me.username}.")
 
     async def stop(self, *args):
         await super().stop()
         print("Bot stopped. Bye.")
 
+async def main():
+    app = Bot()
+    await app.start()
+    await asyncio.Event().wait()  # keeps bot running forever
 
-app = Bot()
-app.run()
+if __name__ == "__main__":
+    asyncio.run(main())
